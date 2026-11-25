@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f6f4ee" />
+    <meta name="description" content="A quiet, offline-first Mandarin vocabulary practice app." />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <title>Hanzi — Mandarin, one word at a time</title>
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#study" aria-label="Hanzi home">
+          <span class="brand-mark" aria-hidden="true">文</span>
+          <span class="brand-name">hanzi<span class="brand-period">.</span></span>
+        </a>
+        <div class="topbar-right">
+          <span class="offline-pill"><span class="status-dot"></span> Offline ready</span>
+          <label class="level-picker">
+            <span class="sr-only">Vocabulary level</span>
+            <select id="level-select" aria-label="Vocabulary level"></select>
+            <span class="select-chevron" aria-hidden="true">⌄</span>
+          </label>
+        </div>
+      </header>
+
+      <main id="main-content" tabindex="-1">
+        <section class="page active" id="study-page" aria-labelledby="study-title">
+          <div class="page-heading study-heading">
+            <div>
+              <p class="eyebrow" id="today-label">YOUR DAILY PRACTICE</p>
+              <h1 id="study-title">A little Mandarin,<br class="mobile-break" /> every day.</h1>
+              <p class="heading-subtitle" id="study-subtitle">Build a steady rhythm, one recall at a time.</p>
+            </div>
+            <div class="streak-card" aria-label="Study streak">
+              <span class="streak-flame" aria-hidden="true">✳</span>
+              <span><strong id="streak-count">0</strong><small>day streak</small></span>
+            </div>
+          </div>
+
+          <div class="study-layout">
+            <section class="review-card" aria-label="Flashcard practice">
+              <div class="review-meta">
+                <span class="card-counter" id="card-counter">TODAY’S QUEUE</span>
+                <span class="due-label"><span class="due-dot"></span><span id="due-count">0 due</span></span>
+              </div>
+
+              <div class="flashcard" id="flashcard">
+                <div class="card-content" id="card-content">
+                  <div class="card-kicker" id="card-category">HSK 1 · WORD</div>
+                  <div class="hanzi" id="card-hanzi" lang="zh-Hans">我</div>
+                  <div class="card-hint" id="card-hint">Think of the meaning and pronunciation</div>
+                  <div class="answer-block" id="answer-block" hidden>
+                    <div class="pinyin" id="card-pinyin" lang="zh-Latn-pinyin">wǒ</div>
+                    <div class="meaning" id="card-meaning">I, me</div>
+                    <div class="memory-note" id="card-note" hidden></div>
+                  </div>
+                </div>
+                <div class="empty-state" id="empty-state" hidden>
+                  <span class="empty-seal" aria-hidden="true">好</span>
+                  <h2 id="empty-title">You’re all caught up.</h2>
+                  <p id="empty-copy">Your next words will be ready when it’s time. Let today’s Mandarin settle in.</p>
+                  <button class="button button-primary" id="empty-learn-button" type="button">Learn 10 new words</button>
+                </div>
+              </div>
+
+              <div class="card-actions" id="card-actions">
+                <button class="button button-reveal" id="reveal-button" type="button">Show answer <span aria-hidden="true">↵</span></button>
+                <div class="answer-actions" id="answer-actions" hidden>
+                  <button class="button button-again" id="again-button" type="button"><span class="button-icon" aria-hidden="true">↻</span><span><strong>Show again</strong><small>Not yet</small></span><kbd>1</kbd></button>
+                  <button class="button button-pass" id="pass-button" type="button"><span class="button-icon" aria-hidden="true">✓</span><span><strong>Pass</strong><small>Got it</small></span><kbd>2</kbd></button>
+                </div>
+              </div>
+              <div class="review-footer">
+                <span id="review-hint">A good guess counts. Trust your memory.</span>
+                <button class="text-button" id="learn-more-button" type="button">Learn 10 more new words <span aria-hidden="true">↗</span></button>
+              </div>
+            </section>
+
+            <aside class="study-aside">
+              <section class="aside-card progress-card">
+                <div class="aside-title-row"><div><p class="eyebrow">TODAY</p><h2>Your progress</h2></div><span class="progress-spark" aria-hidden="true">✳</span></div>
+                <div class="progress-number-row"><strong id="today-passed">0</strong><span>new words passed</span><span class="progress-goal" id="today-goal">of 10</span></div>
+                <div class="progress-track"><span id="today-progress-bar"></span></div>
+                <div class="progress-foot"><span id="remaining-words">0 left in today’s queue</span><span id="accuracy-today">—</span></div>
+              </section>
+              <section class="aside-card rhythm-card">
+                <p class="eyebrow">A NOTE FOR TODAY</p>
+                <p id="daily-note">Small, steady practice makes room for long-term memory.</p>
+                <span class="note-mark" aria-hidden="true">“</span>
+              </section>
+              <section class="aside-card attention-card" id="attention-card" hidden>
+                <div class="attention-icon" aria-hidden="true">!</div>
+                <div><p class="eyebrow">WORTH A CLOSER LOOK</p><p><strong id="attention-count">0</strong> words have been tricky lately.</p><button class="text-button" id="attention-button" type="button">Add a hint or pause one <span aria-hidden="true">→</span></button></div>
+              </section>
+            </aside>
+          </div>
+        </section>
+
+        <section class="page" id="words-page" aria-labelledby="words-title" hidden>
+          <div class="page-heading compact-heading">
+            <div><p class="eyebrow">YOUR VOCABULARY</p><h1 id="words-title">Words, in good company.</h1><p class="heading-subtitle">Explore the words you’re building into memory.</p></div>
+            <div class="word-total"><strong id="word-total">150</strong><span>words in <span class="level-name">HSK 1</span></span></div>
+          </div>
+          <div class="library-toolbar">
+            <label class="search-field"><span aria-hidden="true">⌕</span><input id="word-search" type="search" placeholder="Search Hanzi, pinyin, or meaning" autocomplete="off" /></label>
+            <label class="filter-select"><span class="sr-only">Filter vocabulary</span><select id="word-filter"><option value="all">All words</option><option value="new">Not started</option><option value="learning">Learning</option><option value="attention">Needs attention</option><option value="paused">Paused</option></select><span aria-hidden="true">⌄</span></label>
+          </div>
+          <div class="category-strip" id="category-strip" aria-label="Filter by category"></div>
+          <div class="word-list" id="word-list" aria-live="polite"></div>
+          <div class="list-end" id="list-end"></div>
+        </section>
+
+        <section class="page" id="progress-page" aria-labelledby="progress-title" hidden>
+          <div class="page-heading compact-heading">
+            <div><p class="eyebrow">THE LONG VIEW</p><h1 id="progress-title">Look how far you’ve come.</h1><p class="heading-subtitle">Every word you remember is a little more Mandarin you own.</p></div>
+          </div>
+          <div class="stats-grid">
+            <article class="stat-card stat-highlight"><span class="stat-icon" aria-hidden="true">文</span><p class="eyebrow">IN YOUR MEMORY</p><strong id="stat-learned">0</strong><span>words introduced</span><div class="stat-detail" id="stat-learned-detail">of 150 words</div></article>
+            <article class="stat-card"><span class="stat-icon icon-green" aria-hidden="true">↗</span><p class="eyebrow">LONGEST INTERVAL</p><strong id="stat-longest">0</strong><span>days between reviews</span><div class="stat-detail" id="stat-longest-detail">Keep a gentle pace</div></article>
+            <article class="stat-card"><span class="stat-icon icon-coral" aria-hidden="true">✳</span><p class="eyebrow">CURRENT STREAK</p><strong id="stat-streak">0</strong><span>days in a row</span><div class="stat-detail" id="stat-streak-detail">A fresh start is always here</div></article>
+            <article class="stat-card"><span class="stat-icon icon-blue" aria-hidden="true">✓</span><p class="eyebrow">REVIEWS MADE</p><strong id="stat-reviews">0</strong><span>answers remembered</span><div class="stat-detail" id="stat-again-detail">0 shown again</div></article>
+          </div>
+          <section class="schedule-panel"><div class="schedule-heading"><div><p class="eyebrow">UP NEXT</p><h2>Your review horizon</h2></div><span class="horizon-total" id="horizon-total">0 scheduled</span></div><div class="schedule-bars" id="schedule-bars"></div><p class="schedule-caption">A gentle look at words waiting in the days ahead.</p></section>
+          <section class="attention-list-panel" id="attention-list-panel" hidden><div class="schedule-heading"><div><p class="eyebrow">WORDS TO REVISIT</p><h2>Needs attention</h2></div><span class="horizon-total" id="attention-total">0 words</span></div><div id="attention-list"></div></section>
+        </section>
+      </main>
+
+      <nav class="bottom-nav" aria-label="Main navigation">
+        <a class="nav-link selected" href="#study" data-page="study"><span class="nav-icon" aria-hidden="true">▣</span><span>Study</span><span class="nav-badge" id="nav-due-badge" hidden></span></a>
+        <a class="nav-link" href="#words" data-page="words"><span class="nav-icon nav-book" aria-hidden="true">▤</span><span>Words</span></a>
+        <a class="nav-link" href="#progress" data-page="progress"><span class="nav-icon" aria-hidden="true">◷</span><span>Progress</span></a>
+      </nav>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      <noscript><p class="noscript-note">Hanzi needs JavaScript to save your offline study progress.</p></noscript>
+    </div>
+    <script src="./app.js" defer></script>
+  </body>
+</html>

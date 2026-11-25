@@ -1,0 +1,15 @@
+{
+  "name": "Hanzi — Mandarin Vocabulary",
+  "short_name": "Hanzi",
+  "description": "A quiet, offline-first way to learn Mandarin vocabulary.",
+  "lang": "en",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f6f4ee",
+  "theme_color": "#f6f4ee",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
