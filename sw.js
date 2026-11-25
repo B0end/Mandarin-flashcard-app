@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hanzi-offline-v1';
+const CACHE_NAME = 'hanzi-offline-v2';
 const APP_FILES = [
   './',
   './index.html',
@@ -6,7 +6,12 @@ const APP_FILES = [
   './app.js',
   './manifest.webmanifest',
   './icon.svg',
-  './hsk1.json',
+  './Vocabulary/hsk1.json',
+  './Vocabulary/hsk2.json',
+  './Vocabulary/hsk3.json',
+  './Vocabulary/hsk4.json',
+  './Vocabulary/hsk5.json',
+  './Vocabulary/hsk6.json',
 ];
 
 self.addEventListener('install', (event) => {

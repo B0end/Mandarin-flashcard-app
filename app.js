@@ -2,7 +2,12 @@
   'use strict';
 
   const LEVELS = [
-    { id: 'hsk1', name: 'HSK 1', file: './hsk1.json' },
+    { id: 'hsk1', name: 'HSK 1', file: './Vocabulary/hsk1.json' },
+    { id: 'hsk2', name: 'HSK 2', file: './Vocabulary/hsk2.json' },
+    { id: 'hsk3', name: 'HSK 3', file: './Vocabulary/hsk3.json' },
+    { id: 'hsk4', name: 'HSK 4', file: './Vocabulary/hsk4.json' },
+    { id: 'hsk5', name: 'HSK 5', file: './Vocabulary/hsk5.json' },
+    { id: 'hsk6', name: 'HSK 6', file: './Vocabulary/hsk6.json' },
   ];
   const STORAGE_KEY = 'hanzi-study-v1';
   const DAY_MS = 86_400_000;
@@ -21,6 +26,7 @@
 
   let state = loadState();
   let wordsByLevel = new Map();
+  let levelErrors = new Map();
   let activePage = 'study';
   let selectedCategory = 'All';
   let searchValue = '';
@@ -88,13 +94,71 @@
     catch (error) { showToast('Could not save progress on this device.'); }
   }
 
+  function exportProgress() {
+    const backup = {
+      format: 'hanzi-progress',
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      state,
+    };
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `hanzi-progress-${today()}.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    showToast('Progress backup downloaded.');
+  }
+
+  async function importProgress(file) {
+    if (!file) return;
+    try {
+      const backup = JSON.parse(await file.text());
+      if (backup.format !== 'hanzi-progress' || backup.version !== 1 || !backup.state || typeof backup.state.cards !== 'object') {
+        throw new Error('This is not a Hanzi progress backup.');
+      }
+      if (!window.confirm('Import this backup and replace progress currently saved in this browser? Export your current progress first if you want to keep a copy.')) return;
+      const incoming = backup.state;
+      const knownCards = Object.fromEntries(Object.entries(state.cards).map(([id, card]) => [id, {
+        ...card,
+        interval: 0, multiplier: 2.3, due_date: '', last_reviewed: '',
+        misses_in_cycle: 0, miss_cycle_counted: false, last_attempted: '', repeat_order: 0,
+        leech_score: 0, paused: false, first_seen: '', note: '',
+      }]));
+      for (const [id, card] of Object.entries(incoming.cards)) {
+        if (knownCards[id] && card && typeof card === 'object') knownCards[id] = { ...knownCards[id], ...card, id };
+      }
+      const validIds = new Set(Object.keys(knownCards));
+      const sessions = {};
+      for (const [key, session] of Object.entries(incoming.sessions || {})) {
+        if (!session || !Array.isArray(session.queue)) continue;
+        sessions[key] = { ...session, queue: session.queue.filter((id) => validIds.has(id)) };
+      }
+      state.cards = knownCards;
+      state.sessions = sessions;
+      state.settings = { ...defaultState().settings, ...(incoming.settings || {}) };
+      if (!LEVELS.some((level) => level.id === state.settings.selectedLevel)) state.settings.selectedLevel = LEVELS[0].id;
+      state.stats = { ...defaultState().stats, ...(incoming.stats || {}) };
+      saveState();
+      showToast('Progress imported.');
+      setTimeout(() => location.reload(), 500);
+    } catch (error) {
+      window.alert(error.message || 'Could not read that progress file.');
+    }
+  }
+
   async function loadVocabulary() {
     for (const level of LEVELS) {
       try {
         const response = await fetch(level.file);
         if (!response.ok) throw new Error(`Could not load ${level.name}`);
         const sourceWords = await response.json();
+        if (!Array.isArray(sourceWords)) throw new Error(`${level.name} must contain a JSON array`);
         wordsByLevel.set(level.id, sourceWords);
+        levelErrors.delete(level.id);
         for (const word of sourceWords) {
           const key = `${level.id}:${word.no}`;
           if (!state.cards[key]) {
@@ -108,7 +172,8 @@
         }
       } catch (error) {
         console.error(error);
-        $('study-subtitle').textContent = 'Vocabulary could not be opened. Reconnect once to refresh this offline copy.';
+        wordsByLevel.set(level.id, []);
+        levelErrors.set(level.id, error);
       }
     }
     saveState();
@@ -194,6 +259,9 @@
     const practicedToday = state.stats.byDate[today()]?.newPassed || 0;
     const newGoal = DAILY_NEW_LIMIT + (state.settings.extraNew[today()] || 0);
     const due = countDue();
+    $('study-subtitle').textContent = levelErrors.has(selectedLevel())
+      ? `${LEVELS.find((level) => level.id === selectedLevel())?.name || 'This level'} vocabulary is missing or invalid. Add a JSON array in the Vocabulary folder.`
+      : 'Build a steady rhythm, one recall at a time.';
     $('due-count').textContent = `${due} ${due === 1 ? 'due' : 'due'}`;
     $('card-counter').textContent = queueSize ? `${queueSize} ${queueSize === 1 ? 'WORD' : 'WORDS'} IN TODAY’S QUEUE` : 'TODAY’S QUEUE';
     $('today-passed').textContent = String(practicedToday);
@@ -524,6 +592,12 @@
     $('pass-button').addEventListener('click', recordPass);
     $('again-button').addEventListener('click', recordAgain);
     $('learn-more-button').addEventListener('click', addTenNewWords);
+    $('export-progress-button').addEventListener('click', exportProgress);
+    $('import-progress-button').addEventListener('click', () => $('import-progress-file').click());
+    $('import-progress-file').addEventListener('change', (event) => {
+      importProgress(event.target.files?.[0]);
+      event.target.value = '';
+    });
     $('empty-learn-button').addEventListener('click', addTenNewWords);
     $('attention-button').addEventListener('click', () => { filterValue = 'attention'; navigate('words'); $('word-filter').value = filterValue; renderWords(); });
     $('word-search').addEventListener('input', (event) => { searchValue = event.target.value; renderWords(); });

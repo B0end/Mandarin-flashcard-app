@@ -142,6 +142,12 @@ kbd { position: absolute; right: 9px; top: 9px; min-width: 17px; padding: 2px 4p
 .list-end { padding: 22px 0 5px; text-align: center; color: #a0a39c; font-size: 10px; }
 .no-results { grid-column: 1/-1; text-align: center; padding: 52px 15px; color: #8a9086; font-size: 12px; }
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; }
+.backup-panel { margin-top: 16px; padding: 21px 23px; display: flex; align-items: center; justify-content: space-between; gap: 20px; border: 1px solid #eae8e1; border-radius: 14px; background: rgba(255,254,250,.8); }
+.backup-panel h2 { margin: 0 0 6px; font: 700 16px 'Avenir Next', 'Segoe UI', sans-serif; }
+.backup-panel p:not(.eyebrow) { max-width: 500px; margin: 0; color: #858a83; font-size: 10px; line-height: 1.5; }
+.backup-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.backup-actions .button { min-height: 40px; padding: 0 13px; font-size: 10px; }
+.button-outline { border: 1px solid #dfe5dc; color: var(--green); background: transparent; }
 .stat-card { min-height: 194px; position: relative; border: 1px solid #eae8e1; border-radius: 14px; background: rgba(255,254,250,.8); padding: 19px 19px 16px; overflow: hidden; }
 .stat-highlight { background: #eaf0e8; border-color: #e1e9df; }
 .stat-icon { display: grid; width: 30px; height: 30px; place-items: center; margin-bottom: 17px; border-radius: 9px; background: #dfe9de; color: var(--green); font: 17px 'Noto Serif SC', 'Songti SC', 'STSong', serif; }
@@ -245,6 +251,9 @@ kbd { position: absolute; right: 9px; top: 9px; min-width: 17px; padding: 2px 4p
   .word-info .word-meaning { font-size: 9px; }
   .word-status { font-size: 7px; }
   .stats-grid { gap: 8px; }
+  .backup-panel { align-items: flex-start; flex-direction: column; padding: 17px 15px; }
+  .backup-actions { width: 100%; }
+  .backup-actions .button { flex: 1; padding: 0 8px; }
   .stat-card { min-height: 170px; padding: 14px; }
   .stat-icon { margin-bottom: 12px; }
   .stat-card > strong { font-size: 27px; }

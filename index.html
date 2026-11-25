@@ -126,6 +126,10 @@
             <article class="stat-card"><span class="stat-icon icon-coral" aria-hidden="true">✳</span><p class="eyebrow">CURRENT STREAK</p><strong id="stat-streak">0</strong><span>days in a row</span><div class="stat-detail" id="stat-streak-detail">A fresh start is always here</div></article>
             <article class="stat-card"><span class="stat-icon icon-blue" aria-hidden="true">✓</span><p class="eyebrow">REVIEWS MADE</p><strong id="stat-reviews">0</strong><span>answers remembered</span><div class="stat-detail" id="stat-again-detail">0 shown again</div></article>
           </div>
+          <section class="backup-panel" aria-labelledby="backup-title">
+            <div><p class="eyebrow">YOUR DATA</p><h2 id="backup-title">Take your progress with you.</h2><p>Download a backup, then import that JSON file on another phone to restore your cards, notes, and review history.</p></div>
+            <div class="backup-actions"><button class="button button-primary" id="export-progress-button" type="button">Download progress</button><button class="button button-outline" id="import-progress-button" type="button">Import progress</button><input id="import-progress-file" type="file" accept="application/json,.json" hidden /></div>
+          </section>
           <section class="schedule-panel"><div class="schedule-heading"><div><p class="eyebrow">UP NEXT</p><h2>Your review horizon</h2></div><span class="horizon-total" id="horizon-total">0 scheduled</span></div><div class="schedule-bars" id="schedule-bars"></div><p class="schedule-caption">A gentle look at words waiting in the days ahead.</p></section>
           <section class="attention-list-panel" id="attention-list-panel" hidden><div class="schedule-heading"><div><p class="eyebrow">WORDS TO REVISIT</p><h2>Needs attention</h2></div><span class="horizon-total" id="attention-total">0 words</span></div><div id="attention-list"></div></section>
         </section>

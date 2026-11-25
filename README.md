@@ -6,13 +6,17 @@ Hanzi is an installable, offline-first Mandarin flashcard app. It is a small sta
 
 Serve this folder from a local web server while developing. For example, from this folder run `python -m http.server 8000` and open `http://localhost:8000`. The first visit caches the app shell and HSK 1 vocabulary. After that, the installed app can be opened offline. Service workers require HTTPS on a hosted site; publish this folder to an HTTPS static host such as GitHub Pages to install it on a phone. Open the hosted URL in Safari or Chrome and choose **Add to Home Screen** / **Install app**.
 
-## Add another HSK level
+## Vocabulary files
 
-1. Add the next vocabulary file beside `hsk1.json`, using the same fields: `no`, `chinese`, `pinyin`, `english`, and `category`.
-2. Add its entry to the `LEVELS` array near the top of `app.js`, for example `{ id: 'hsk2', name: 'HSK 2', file: './hsk2.json' }`.
-3. Add the new JSON filename to `APP_FILES` in `sw.js` and increment `CACHE_NAME` so installed devices download the new offline copy.
+Put `hsk1.json` through `hsk6.json` in the `Vocabulary/` folder. The app already lists these levels and caches each file for offline use. Each file should contain a JSON array of entries with `no`, `chinese`, `pinyin`, `english`, and `category`. A level with a missing or invalid file will show a message while other levels remain usable.
 
-Review progress is stored locally in the browser. It is not synced between devices. Clearing the browser's site data removes that local progress.
+If you add a differently named level later, add its `id`, display `name`, and `./Vocabulary/...` file path to `LEVELS` in `app.js`, add its file to `APP_FILES` in `sw.js`, and increment the service worker `CACHE_NAME`.
+
+## Transfer progress between phones
+
+On the **Progress** page, tap **Download progress** to save a JSON backup. On the other phone, open the same app, go to **Progress → Import progress**, and select that file. Import replaces progress stored by that browser, after confirmation. It restores card schedules, notes, daily queues, settings, and review statistics; the vocabulary itself still comes from the app's `Vocabulary/` files.
+
+Progress is stored locally in the browser and is not synced automatically. Keep a downloaded backup somewhere accessible to both phones. Clearing browser site data removes local progress, so export backups periodically.
 
 ## Review schedule
 
